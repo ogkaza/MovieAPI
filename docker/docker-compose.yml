@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: moviedb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d moviedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: '6790153724e9'
+    container_name: app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: admin
+      DB_URL: jdbc:postgresql://db:5432/moviedb
+      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
