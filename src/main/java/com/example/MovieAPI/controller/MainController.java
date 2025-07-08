@@ -2,6 +2,7 @@ package com.example.MovieAPI.controller;
 
 import com.example.MovieAPI.entity.Movie;
 import com.example.MovieAPI.repo.MovieRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,10 +29,13 @@ public class MainController {
         return objectMapper.writeValueAsString(movies);
     }
 
+    @SneakyThrows
     @Operation(summary = "добавление фильма")
     @PostMapping("/add")
-    public void addNewMovie(@RequestBody Movie movie) {
+    public String addNewMovie(@RequestBody Movie movie) {
+        if (String.valueOf(movie.getYearRelease()).length() != 4) return "YEAR IS NOT CORRECT!";
         log.info("New row: " + movieRepo.save(movie));
+        return objectMapper.writeValueAsString(movie);
     }
 
     @Operation(summary = "поиск фильмов по названию")

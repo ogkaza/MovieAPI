@@ -59,7 +59,6 @@ public class Movie {
     }
 
     public void setYearRelease(int yearRelease) throws Exception {
-        if (String.valueOf(yearRelease).length() != 4) throw new Exception("YEAR IS NOT CORRECT!");
         this.yearRelease = yearRelease;
     }
 
